@@ -21,8 +21,15 @@ tags:
   - finance
   - nespolehlivy-platce
 startCommand:
-  type: stdio
-  command: npx
-  args:
-    - tsx
-    - src/index.ts
+  type: http
+  url: https://worthy-adventure-production.up.railway.app/mcp
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        title: API Key (Optional)
+        description: "Remove the 10 calls/day limit. Get your key at: https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00"
+    required: []
+  exampleConfig:
+    apiKey: "km_your_key_here"
