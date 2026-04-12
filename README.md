@@ -72,6 +72,15 @@ All data sources are official government APIs with no API key required.
 - Node.js 18+
 - No API keys needed — all data sources are free public government APIs
 
+## Pricing
+
+| Tier | Limit | Price |
+|------|-------|-------|
+| Free | 10 calls/day | $0 |
+| Basic | 1,000 calls/month | [$9/month](https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00) |
+
+[Get API key →](https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00)
+
 ## License
 
 MIT
