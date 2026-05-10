@@ -22,7 +22,7 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
 
   // With API key → verify via Unkey
   if (apiKey) {
-    const { result, error } = await unkey.keys.verify({ key: apiKey, apiId: UNKEY_API_ID });
+    const { result, error } = await unkey.keys.verifyKey({ key: apiKey, apiId: UNKEY_API_ID });
 
     if (error || !result?.valid) {
       res.status(401).json({
