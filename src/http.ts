@@ -11,14 +11,18 @@ const FREE_LIMIT = 10;
 const freeCalls = new Map<string, { count: number; resetAt: number }>();
 
 async function verifyKeyViaRest(apiKey: string): Promise<{ valid: boolean; remaining?: number }> {
-  const res = await fetch("https://api.unkey.dev/v1/keys.verifyKey", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key: apiKey, apiId: UNKEY_API_ID }),
-  });
-  if (!res.ok) return { valid: false };
-  const data = await res.json() as any;
-  return { valid: data.valid === true, remaining: data.ratelimit?.remaining };
+  try {
+    const res = await fetch("https://api.unkey.dev/v1/keys.verifyKey", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: apiKey, apiId: UNKEY_API_ID }),
+    });
+    if (!res.ok) return { valid: false };
+    const data = await res.json() as any;
+    return { valid: data.valid === true, remaining: data.ratelimit?.remaining };
+  } catch {
+    return { valid: false };
+  }
 }
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
