@@ -10,6 +10,8 @@ const UNKEY_API_ID = process.env.UNKEY_API_ID!;
 const FREE_LIMIT = 10;
 const freeCalls = new Map<string, { count: number; resetAt: number }>();
 
+const UPGRADE_URL = "https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00";
+
 async function verifyKeyViaRest(apiKey: string): Promise<{ valid: boolean; remaining?: number }> {
   try {
     const res = await fetch("https://api.unkey.dev/v1/keys.verifyKey", {
@@ -34,14 +36,14 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     if (!valid) {
       res.status(401).json({
         error: "Invalid API key.",
-        message: "Get your key at https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00",
+        message: `Your API key is invalid or expired. Get a new one at ${UPGRADE_URL} ($9/month, unlimited calls).`,
       });
       return;
     }
     if (remaining !== undefined && remaining === 0) {
       res.status(429).json({
-        error: "Rate limit exceeded.",
-        message: "Upgrade at https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00",
+        error: "Monthly limit reached.",
+        message: `You've used all calls for this billing period. Renew or upgrade at ${UPGRADE_URL}`,
       });
       return;
     }
@@ -61,7 +63,8 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   if (entry.count >= FREE_LIMIT) {
     res.status(429).json({
       error: `Free tier limit reached (${FREE_LIMIT} calls/day).`,
-      message: "Get a paid API key: https://buy.stripe.com/4gM3cw8Dz28qcAYdHJaEE00",
+      message: `You've hit the free limit. For unlimited access, get a paid API key for $9/month: ${UPGRADE_URL}`,
+      upgrade: UPGRADE_URL,
     });
     return;
   }
